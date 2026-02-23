@@ -3,33 +3,54 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Come voterebbe un illuminista? — Strumento (elettore + profili + radar)</title>
+<title>Come voterebbe un illuminista? — Profili, radar e lettere</title>
 
 <style>
   :root{
-    --bg:#0b1220; --panel:#121b2e; --text:#eaf0ff; --muted:#a9b6d6;
-    --ok:#2dd4bf; --bad:#fb7185; --warn:#fbbf24; --line:#2a3552; --ink:#0b1430;
+    /* Palette “pergamena / carta da zucchero” (chiara ma non abbagliante) */
+    --bg1:#fbf7ef;
+    --bg2:#f2eadc;
+    --panel:#fbf8f1;
+    --panel2:#f7f0e2;
+    --ink:#fffdf8;
+
+    --text:#1f2937;
+    --muted:#51606b;
+
+    --ok:#1f8a6b;
+    --bad:#b23b2a;
+    --warn:#b0892e;
+
+    --line:#d6ccbd;
+    --line2:#cbbfae;
+
     --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
   }
+
   *{ box-sizing:border-box; }
+
   body{
-    margin:0; font-family:var(--sans);
-    background:radial-gradient(1200px 500px at 20% 0%, rgba(45,212,191,0.12), transparent 60%),
-               radial-gradient(900px 500px at 90% 10%, rgba(251,113,133,0.10), transparent 60%),
-               linear-gradient(180deg,var(--bg),#070b14);
+    margin:0;
+    font-family:var(--sans);
+    background:
+      radial-gradient(1200px 500px at 20% 0%, rgba(176,137,46,0.10), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(31,138,107,0.10), transparent 60%),
+      linear-gradient(180deg, var(--bg1), var(--bg2));
     color:var(--text);
     padding-bottom: 120px;
   }
+
   header{
-    padding:20px 16px;
+    padding:18px 16px;
     border-bottom:1px solid var(--line);
-    background: rgba(8,12,22,0.55);
+    background: rgba(251,248,241,0.92);
     backdrop-filter: blur(6px);
     position: sticky; top:0; z-index: 10;
   }
   header h1{ margin:0 0 6px 0; font-size:20px; }
-  header p{ margin:0; color:var(--muted); max-width:1100px; line-height:1.4; }
+  header p{ margin:0; color:var(--muted); max-width:1100px; line-height:1.45; }
 
   main{
     max-width:1240px;
@@ -42,28 +63,28 @@
   @media(max-width:980px){ main{ grid-template-columns:1fr; } }
 
   .card{
-    background:rgba(18,27,46,0.92);
+    background:rgba(251,248,241,0.92);
     border:1px solid var(--line);
     border-radius:14px;
     padding:14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 28px rgba(31,41,55,0.12);
   }
   .card h2{ margin:0 0 10px 0; font-size:16px; }
-  .sub{ color:var(--muted); font-size:13px; line-height:1.4; }
+  .sub{ color:var(--muted); font-size:13px; line-height:1.45; }
   .hr{ height:1px; background:var(--line); margin:10px 0; }
   .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 
   .chip{
-    background:rgba(11,20,48,0.55);
-    border:1px solid var(--line);
+    background:rgba(247,240,226,0.8);
+    border:1px solid var(--line2);
     padding:8px 10px;
     border-radius:999px;
     font-size:13px;
   }
   .chip b{ font-family:var(--mono); font-weight:900; }
-  .chip.ok{ border-color: rgba(45,212,191,0.35); }
-  .chip.bad{ border-color: rgba(251,113,133,0.35); }
-  .chip.warn{ border-color: rgba(251,191,36,0.35); }
+  .chip.ok{ border-color: rgba(31,138,107,0.35); }
+  .chip.bad{ border-color: rgba(178,59,42,0.35); }
+  .chip.warn{ border-color: rgba(176,137,46,0.55); }
 
   table{
     width:100%;
@@ -72,30 +93,39 @@
     overflow:hidden;
     border-radius:12px;
     border:1px solid var(--line);
+    background: rgba(255,253,248,0.85);
   }
   th, td{ padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
-  th{ background:#0f1830; font-size:12px; color:var(--muted); text-align:left; }
+  th{ background:rgba(247,240,226,0.9); font-size:12px; color:var(--muted); text-align:left; }
   tr:last-child td{ border-bottom:none; }
-  .code{ font-family:var(--mono); color:#c7d2fe; font-weight:900; }
-  .desc{ color:var(--muted); font-size:12px; line-height:1.35; }
-  .why{ color:#c7d2fe; font-size:12px; line-height:1.35; margin-top:6px; }
+
+  .code{ font-family:var(--mono); color:#334155; font-weight:900; }
+  .desc{ color:var(--muted); font-size:12px; line-height:1.4; }
+  .why{ color:#344256; font-size:12px; line-height:1.35; margin-top:6px; }
 
   input[type=number]{
     width:80px; padding:8px;
     background:var(--ink); color:var(--text);
-    border:1px solid var(--line); border-radius:10px;
-    font-family:var(--mono); font-size:13px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-family:var(--mono);
+    font-size:13px;
   }
 
   button{
-    background:#1b2a4d; color:var(--text);
-    border:1px solid var(--line);
+    background:rgba(247,240,226,0.95);
+    color:var(--text);
+    border:1px solid var(--line2);
     border-radius:12px;
     padding:10px 12px;
     cursor:pointer;
     font-weight:900;
   }
-  button:hover{ filter:brightness(1.05); }
+  button:hover{ filter:brightness(1.02); }
+  button.secondary{
+    background:rgba(251,248,241,0.92);
+    font-weight:800;
+  }
 
   canvas{
     background:var(--ink);
@@ -113,7 +143,7 @@
     border:1px solid var(--line);
     border-radius:14px;
     padding:12px;
-    background:rgba(11,20,48,0.55);
+    background:rgba(247,240,226,0.65);
   }
   .kpi .val{ font-family:var(--mono); font-size:20px; font-weight:900; margin-top:4px; }
   .kpi .lab{ color:var(--muted); font-size:12px; }
@@ -122,39 +152,42 @@
     border:1px solid var(--line);
     border-radius:12px;
     padding:10px 12px;
-    background:rgba(11,20,48,0.45);
+    background:rgba(247,240,226,0.55);
     margin-top:10px;
   }
   details summary{ cursor:pointer; font-weight:900; }
-  details p, details li{ color:var(--muted); font-size:13px; line-height:1.4; }
+  details p, details li{ color:var(--muted); font-size:13px; line-height:1.45; }
 
-  /* Profiles */
   .profiles{ display:grid; gap:12px; }
   .profile{
     display:grid; grid-template-columns: 84px 1fr; gap:12px;
     border:1px solid var(--line);
     border-radius:14px;
     padding:12px;
-    background:rgba(11,20,48,0.50);
+    background:rgba(255,253,248,0.75);
+  }
+  .profile.compareOn{
+    border-color: rgba(176,137,46,0.75);
+    box-shadow: 0 0 0 1px rgba(176,137,46,0.22) inset;
   }
   .profile img{
     width:84px; height:84px;
     object-fit:cover;
     border-radius:14px;
     border:1px solid var(--line);
-    background:rgba(255,255,255,0.06);
+    background:rgba(0,0,0,0.03);
   }
   .profile h3{ margin:0; font-size:14px; }
-  .profile .bio{ margin-top:4px; color:var(--muted); font-size:12px; line-height:1.35; }
+  .profile .bio{ margin-top:4px; color:var(--muted); font-size:12px; line-height:1.4; }
   .profile .quote{
     margin-top:8px;
     padding:8px 10px;
-    border-left:4px solid rgba(251,191,36,0.9);
-    background:rgba(0,0,0,0.18);
+    border-left:4px solid rgba(176,137,46,0.95);
+    background:rgba(247,240,226,0.55);
     border-radius:10px;
     color:var(--text);
     font-size:12px;
-    line-height:1.35;
+    line-height:1.45;
   }
   .profile .btnrow{ margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; }
 
@@ -163,17 +196,17 @@
     border:1px solid var(--line);
     border-radius:12px;
     overflow:hidden;
+    background:rgba(255,253,248,0.75);
   }
-  .miniTable table{ border:none; border-radius:0; }
+  .miniTable table{ border:none; border-radius:0; background:transparent; }
   .miniTable th, .miniTable td{ border-bottom:1px solid var(--line); padding:8px; }
   .miniTable tr:last-child td{ border-bottom:none; }
-  .miniTable th{ background:rgba(15,24,48,0.9); }
+  .miniTable th{ background:rgba(247,240,226,0.85); }
 
-  /* Sticky disclaimer */
   .disclaimer{
     position:fixed; left:0; right:0; bottom:0;
     border-top:1px solid var(--line);
-    background:rgba(8,12,22,0.92);
+    background:rgba(251,248,241,0.94);
     backdrop-filter: blur(6px);
     padding:10px 12px;
     z-index:9999;
@@ -184,20 +217,72 @@
   }
   .disclaimer strong{ color:var(--warn); }
   .disclaimer .text{
-    color:var(--muted); font-size:12px; line-height:1.35; max-width:980px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.4;
+    max-width:980px;
   }
   .disclaimer button{
-    padding:8px 10px; border-radius:999px; font-size:12px; background:#141f3a;
+    padding:8px 10px;
+    border-radius:999px;
+    font-size:12px;
+    background:rgba(247,240,226,0.95);
   }
   .sources{
     display:none;
     margin-top:8px;
     padding-top:8px;
-    border-top:1px dashed rgba(42,53,82,0.9);
+    border-top:1px dashed rgba(203,191,174,0.9);
     width:100%;
   }
-  .sources a{ color:#c7d2fe; text-decoration:none; }
-  .sources a:hover{ text-decoration:underline; }
+
+  .letterBox{
+    border:1px solid rgba(176,137,46,0.45);
+    background: linear-gradient(180deg, rgba(247,240,226,0.85), rgba(255,253,248,0.85));
+    border-radius:14px;
+    padding:12px 12px 10px 12px;
+    margin-top:10px;
+  }
+  .letterBox .sig{
+    margin-top:8px;
+    color: var(--muted);
+    font-size:12px;
+  }
+  .letterBox .dropcap{ font-family: var(--serif); }
+  .letterBox .dropcap::first-letter{
+    float:left;
+    font-size:34px;
+    line-height:1;
+    padding-right:6px;
+    font-weight:900;
+    color: rgba(176,137,46,0.95);
+    font-family: var(--serif);
+  }
+
+  .legendRow{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    margin-top:8px;
+  }
+  .legend{
+    display:flex; align-items:center; gap:8px;
+    font-size:12px; color:var(--muted);
+    border:1px solid var(--line);
+    background:rgba(247,240,226,0.55);
+    padding:6px 10px;
+    border-radius:999px;
+  }
+  .dot{ width:10px; height:10px; border-radius:999px; display:inline-block; }
+
+  .tilt{
+    margin-top:6px;
+    font-size:12px;
+    color: rgba(176,137,46,0.95);
+    font-weight:900;
+  }
+  .tilt small{
+    color:var(--muted);
+    font-weight:700;
+  }
 </style>
 </head>
 
@@ -205,18 +290,18 @@
 <header>
   <h1>🗳️ Come voterebbe un illuminista? — confronto valori (1–10)</h1>
   <p>
-    <b>Cosa fai tu:</b> dai un voto <b>da 1 a 10</b> a ogni criterio (puoi dare lo stesso voto a più criteri).
+    <b>Cosa fai tu:</b> dai un voto <b>da 1 a 10</b> a ogni criterio.
     <br>
-    <b>Cosa fa il sistema:</b> combina i tuoi voti (come importanze) con punteggi SÌ/NO e produce un confronto coerente con i tuoi valori.
+    <b>In più:</b> puoi <b>confrontare</b> un profilo (senza cambiare i tuoi voti) sovrapponendolo nel radar.
   </p>
 </header>
 
 <main>
-  <!-- LEFT: elettore -->
+  <!-- LEFT -->
   <section class="card">
     <h2>1) Voti dell’elettore (1–10)</h2>
     <div class="sub">
-      Non devi “dividere 100 punti”. Basta dare un voto a ciascun criterio.  
+      Non devi “dividere 100 punti”. Basta dare un voto a ciascun criterio.
       Se due criteri sono ugualmente importanti, dai lo stesso voto.
     </div>
 
@@ -242,33 +327,26 @@
     </table>
 
     <details>
-      <summary>Motivazioni “scientifiche ma chiare” dei criteri (perché questi 6?)</summary>
-      <p>
-        Questi criteri sono una traduzione operativa di idee classiche sulla libertà politica (Montesquieu, Beccaria, Madison)
-        e di un metodo moderno per combinare criteri multipli (indicatori compositi / MCDA).
-      </p>
+      <summary>Motivazioni (in breve)</summary>
       <ul id="motivationList"></ul>
-      <p>
-        Metodo moderno di riferimento: “Handbook on Constructing Composite Indicators” (OECD/JRC) su costruzione di indici, pesi e robustezza. [1](https://publications.jrc.ec.europa.eu/repository/handle/JRC47008)[2](https://www.oecd.org/en/publications/handbook-on-constructing-composite-indicators_533411815016.html)[3](https://knowledge4policy.ec.europa.eu/sites/default/files/jrc47008_handbook_final.pdf)
+      <p class="desc">
+        Il modello è “trasparente”: mostra anche se un criterio, per come sono stimati i punteggi, tende un poco verso SÌ o verso NO.
+        (Questo riflette una lettura “settecentesca” prudenziale verso possibili leve di controllo politico).
       </p>
     </details>
 
     <div class="miniTable" style="margin-top:12px">
       <table>
         <thead>
-          <tr>
-            <th colspan="4">Riepilogo elettore (i tuoi voti) — per criterio</th>
-          </tr>
-          <tr>
-            <th>Cod.</th><th>Voto</th><th>Peso w</th><th>Nota</th>
-          </tr>
+          <tr><th colspan="4">Riepilogo elettore — per criterio</th></tr>
+          <tr><th>Cod.</th><th>Voto</th><th>Peso w</th><th>Nota</th></tr>
         </thead>
         <tbody id="electorSummary"></tbody>
       </table>
     </div>
   </section>
 
-  <!-- RIGHT: grafico + profili -->
+  <!-- RIGHT -->
   <aside class="card">
     <h2>2) Grafico + giudizio</h2>
 
@@ -290,20 +368,60 @@
 
     <div class="sub" id="whyChoice" style="margin-top:8px">—</div>
 
-    <div class="hr"></div>
+    <details style="margin-top:10px;">
+      <summary>Perché vince SÌ o NO (contributi per criterio)</summary>
+      <div class="desc" style="margin-top:8px;">
+        La differenza totale è la somma di <b>w × (SÌ−NO)</b> su ciascun criterio:
+        se la somma è positiva, tende SÌ; se negativa, tende NO.
+      </div>
+      <div class="miniTable" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr><th colspan="5">Contributi al risultato</th></tr>
+            <tr>
+              <th style="width:8%">Cod.</th>
+              <th>Criterio</th>
+              <th style="width:12%">Peso w</th>
+              <th style="width:12%">SÌ−NO</th>
+              <th style="width:16%">w×(SÌ−NO)</th>
+            </tr>
+          </thead>
+          <tbody id="contribBody"></tbody>
+          <tfoot>
+            <tr>
+              <th colspan="4">Somma contributi (Δ)</th>
+              <th id="contribSum">—</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </details>
 
-    <canvas id="radar" width="980" height="520"></canvas>
-    <div class="sub" style="margin-top:8px">
-      <b>Titolo grafico:</b> Punteggi standard SÌ/NO per criterio (0–10).  
-      Ogni punto è etichettato “Ck x.y”.
+    <div class="letterBox">
+      <div style="font-weight:900; margin-bottom:6px;">Lettera persiana (sintesi)</div>
+      <div id="lettreElector" class="dropcap" style="font-size:13px; line-height:1.55;">—</div>
+      <div class="sig" id="lettreElectorSig">—</div>
     </div>
 
     <div class="hr"></div>
 
-    <h2>3) Profili illuministi (con voti per criterio)</h2>
+    <canvas id="radar" width="980" height="520"></canvas>
+
+    <div class="legendRow">
+      <div class="legend"><span class="dot" style="background: rgba(176,137,46,0.95)"></span> Elettore (tu)</div>
+      <div class="legend" id="legendCompare" style="display:none;">
+        <span class="dot" style="background: rgba(31,138,107,0.95)"></span> <span id="legendCompareName">Profilo</span>
+      </div>
+    </div>
+
+    <div class="sub" id="compareNote" style="margin-top:8px; display:none;">—</div>
+
+    <div class="hr"></div>
+
+    <h2>3) Profili + confronto</h2>
     <div class="sub">
-      Ogni profilo ha un set di voti 1–10 per i criteri: mostra <b>cosa privilegerebbe</b> secondo i testi.
-      Puoi <b>applicarlo</b> (copiare quei voti nei tuoi) oppure solo <b>confrontarlo</b>.
+      <b>Confronta</b> = sovrappone i voti del profilo ai tuoi nel radar (senza cambiarli).
+      <br><b>Giudizio del profilo</b> = calcola l’esito “come se” quel profilo fosse l’elettore.
     </div>
 
     <div class="profiles" id="profiles"></div>
@@ -313,83 +431,81 @@
 <div class="disclaimer">
   <div class="wrap">
     <div class="text">
-      <strong>Nota:</strong> Il risultato è una <b>raccomandazione di coerenza</b> (“dato ciò che ti importa, quale opzione risulta più coerente”),
-      non un obbligo di voto. Le citazioni storiche giustificano i criteri (es. separazione dei poteri, anti‑arbitrio).  
-      Fonti e citazioni complete sono indicate nel box “riferimenti”.
+      <strong>Nota:</strong> il risultato è una raccomandazione di coerenza; il radar mostra priorità (importanze).
+      <br>
+      <span class="desc">Il modello mantiene un <b>lieve</b> “tilt prudenziale” (tipico di molte teorie settecentesche) verso il rischio che leve politiche o disciplinari comprimano l’indipendenza nel tempo.</span>
     </div>
-    <button id="toggleSources">Mostra riferimenti</button>
+    <button id="toggleSources">Mostra note</button>
     <div class="sources" id="sourcesBox">
-      <ul>
-        <li>Montesquieu, Libro XI: “le pouvoir arrête le pouvoir” (Wikisource) — <a href="https://fr.wikisource.org/wiki/Esprit_des_lois_%281777%29/L11/C4" target="_blank">link</a>. [4](https://fr.wikisource.org/wiki/Esprit_des_lois_%281777%29/L11/C4)</li>
-        <li>Montesquieu, Libro XI cap. VI (libertà come sicurezza + separazione giudicare) — BnF/Gallica — <a href="https://gallica.bnf.fr/essentiels/montesquieu/esprit-lois/constitution-angleterre" target="_blank">link</a>. [5](https://gallica.bnf.fr/essentiels/montesquieu/esprit-lois/constitution-angleterre)</li>
-        <li>Beccaria, “Interpretazione delle leggi” (Wikisource) — <a href="https://it.wikisource.org/wiki/Dei_delitti_e_delle_pene/Capitolo_IV" target="_blank">link</a>. [6](https://it.wikisource.org/wiki/Dei_delitti_e_delle_pene/Capitolo_IV)</li>
-        <li>Madison, Federalist 51 (Constitution Center) — <a href="https://constitutioncenter.org/the-constitution/historic-document-library/detail/james-madison-federalist-no-51-1788" target="_blank">link</a>. [7](https://constitutioncenter.org/the-constitution/historic-document-library/detail/james-madison-federalist-no-51-1788)</li>
-        <li>OECD/JRC handbook sugli indicatori compositi (metodo) — <a href="https://publications.jrc.ec.europa.eu/repository/handle/JRC47008" target="_blank">link</a>. [1](https://publications.jrc.ec.europa.eu/repository/handle/JRC47008)</li>
-        <li>Immagini (pubblico dominio): Montesquieu (Commons) <a href="https://commons.wikimedia.org/wiki/File:Montesquieu_1.png" target="_blank">link</a>; Beccaria <a href="https://commons.wikimedia.org/wiki/File:Cesare_Beccaria_1738-1794.jpg" target="_blank">link</a>; Madison <a href="https://commons.wikimedia.org/wiki/File:James_Madison_Portrait2.jpg" target="_blank">link</a>. [8](https://commons.wikimedia.org/wiki/File:Montesquieu_1.png)[9](https://commons.wikimedia.org/wiki/File:Cesare_Beccaria_1738-1794.jpg)[10](https://commons.wikimedia.org/wiki/File:James_Madison_Portrait2.jpg)</li>
-      </ul>
+      <div class="desc">
+        <b>Alta Corte disciplinare (contesto):</b> la riforma prevede un organo disciplinare nuovo con una quota laica anche legata a elenchi predisposti dal Parlamento e a nomine, e un presidente eletto tra i laici; varie analisi discutono il rischio (o il beneficio) di questa scelta in termini di equilibrio tra poteri.
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 /* ===========================
-   0) Dati: criteri, motivazioni, citazioni (brevi) e punteggi SÌ/NO
+   0) Criteri + punteggi (con lieve tilt prudenziale)
+   Diffs (SÌ−NO): C1=-3, C2=+2, C3=0, C4=0, C5=+1, C6=-1
+   => lieve prudenza (NO) ma non schiacciante: C2 e C5 tengono vivo il SÌ.
    =========================== */
-
-// punteggi SÌ/NO qui sono "standard" (0–10) e servono a creare un confronto replicabile.
-// (Puoi modificarli in una versione avanzata, ma qui restiamo nella versione elettore.)
-
 const criteria = [
-  {
-    code:"C1",
-    title:"Separazione del giudicare dalla politica",
+  { code:"C1",
+    title:"Distanza del giudicare dalla politica",
     si:6, no:9,
-    sci:"Indipendenza istituzionale: ridurre incentivi/leve che permettono a un potere (politico) di influenzarne un altro (giudiziario).",
-    quote:"« Il n’y a point encore de liberté, si la puissance de juger n’est pas séparée… » (Livre XI, ch. VI)."
+    sci:"Quanto l’assetto riduce pressioni e incentivi politici sul giudice (nomina ≠ controllo): la paura dell’interferenza è nemica della libertà.",
+    quote:"Un giudice timoroso non protegge: obbedisce.",
+    tiltNote:"Tende al NO (prudenza settecentesca: evitare leve politiche sulla giurisdizione)."
   },
-  {
-    code:"C2",
-    title:"Terzietà: accusa ≠ giudice",
-    si:9, no:6,
-    sci:"Separazione di ruolo/funzione: minimizzare conflitti d’interesse e “vicinanza strutturale” tra chi accusa e chi decide.",
-    quote:"« Tout serait perdu… si… exerçaient… celui de juger… » (Livre XI, ch. VI)."
+  { code:"C2",
+    title:"Terzietà e imparzialità percepita del giudice",
+    si:8, no:6,
+    sci:"Quanto l’assetto rende credibile la neutralità tra accusa e difesa. Nel linguaggio dei Lumi: separare ruoli per ridurre sospetto e pre-giudizio.",
+    quote:"La giustizia deve essere giusta, e anche parere tale.",
+    tiltNote:"Tende al SÌ (accento sulla terzietà del giudice)."
   },
-  {
-    code:"C3",
-    title:"Libertà come sicurezza (assenza di paura)",
-    si:6, no:7,
-    sci:"Outcome civico: la libertà politica come fiducia/sicurezza percepita (assenza di paura di arbitrii) che dipende da istituzioni prevedibili.",
-    quote:"« La liberté politique… tranquillité d’esprit… opinion… de sa sûreté… » (Livre XI, ch. VI)."
+  { code:"C3",
+    title:"Libertà come sicurezza (fiducia nel processo)",
+    si:6, no:6,
+    sci:"Quanto l’assetto aumenta prevedibilità e riduce il timore dell’arbitrio. Qui SÌ e NO rivendicano entrambi ‘sicurezza’: cambia il tipo di rischio temuto.",
+    quote:"La libertà comincia quando cessa il timore dell’arbitrio.",
+    tiltNote:"Neutro (dipende da quali rischi temi di più)."
   },
-  {
-    code:"C4",
-    title:"Leggi chiare, poco arbitrio del giudice",
+  { code:"C4",
+    title:"Leggi chiare, poco arbitrio interpretativo",
     si:7, no:7,
-    sci:"Predictability: ridurre varianza decisionale e discrezionalità; più regole chiare = minore arbitrarietà e maggiore equità di trattamento.",
-    quote:"« Nemmeno l’autorità d’interpretare le leggi… può risiedere presso i giudici… » (Beccaria, cap. IV)."
+    sci:"Quanto l’assetto favorisce regole comprensibili e applicate in modo prevedibile (ridurre varianza e discrezionalità indebita).",
+    quote:"La legge deve parlare chiaro.",
+    tiltNote:"Neutro."
   },
-  {
-    code:"C5",
-    title:"Resistenza a fazioni e cattura",
+  { code:"C5",
+    title:"Anticattura, correnti e disciplina credibile",
     si:7, no:6,
-    sci:"Anti-cattura: prevenire monopolio/controllo del sistema da parte di gruppi (interni o esterni) attraverso incentivi e selezione/controlli.",
-    quote:"« …le pouvoir arrête le pouvoir. » (Livre XI, ch. IV)."
+    sci:"Quanto l’assetto riduce cattura (correntismo o altre fazioni) e rende credibile la disciplina. Però: un organo disciplinare nuovo con quota laica legata a elenchi/nomine può essere letto come accountability (SÌ) o come leva di pressione politica (NO).",
+    quote:"Chi controlla i controllori decide molto più di quanto dica.",
+    tiltNote:"Tende al SÌ, ma con ambivalenza reale sul profilo ‘controllo politico’."
   },
-  {
-    code:"C6",
-    title:"Contrappesi robusti nel lungo periodo",
+  { code:"C6",
+    title:"Contrappesi nel lungo periodo (stabilità e anti-deriva)",
     si:6, no:7,
-    sci:"Robustezza dinamica: evitare concentrazione graduale del potere nel tempo; contrappesi e motivazioni interne riducono derive.",
-    quote:"“Ambition must be made to counteract ambition.” (Federalist 51)."
+    sci:"Quanto l’architettura regge nel tempo: contrappesi, indipendenza e responsabilità devono coesistere anche quando cambiano maggioranze e incentivi. Qui pesa anche come si percepisce il nuovo sistema disciplinare (garanzia o leva).",
+    quote:"Ciò che regge oggi deve reggere anche domani.",
+    tiltNote:"Tende al NO (prudenza: diffidenza per nuovi centri di potere nel tempo)."
   }
 ];
 
-// citazioni corte sono in pubblico dominio; fonti complete nel box riferimenti. [4](https://fr.wikisource.org/wiki/Esprit_des_lois_%281777%29/L11/C4)[5](https://gallica.bnf.fr/essentiels/montesquieu/esprit-lois/constitution-angleterre)[6](https://it.wikisource.org/wiki/Dei_delitti_e_delle_pene/Capitolo_IV)[7](https://constitutioncenter.org/the-constitution/historic-document-library/detail/james-madison-federalist-no-51-1788)
+function tiltLabel(diff){
+  if(diff>0) return "tende al SÌ";
+  if(diff<0) return "tende al NO";
+  return "neutro";
+}
 
 /* ===========================
-   1) Elettore: voti 1–10 (non 100 punti)
+   1) Elettore + confronto
    =========================== */
-let electorVotes = [5,5,5,5,5,5]; // default neutro
+let electorVotes = [5,5,5,5,5,5];
+let compareKey = null;
 
 function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
 function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
@@ -398,8 +514,7 @@ function normalizeVotes(votes){
   if(s<=0) return votes.map(_=>1/votes.length);
   return votes.map(v=>v/s);
 }
-
-function scoreOption(weights, which){ // which: "si"|"no"
+function scoreOption(weights, which){
   let total = 0;
   for(let i=0;i<criteria.length;i++){
     const perf = (which==="si") ? criteria[i].si : criteria[i].no;
@@ -409,84 +524,234 @@ function scoreOption(weights, which){ // which: "si"|"no"
 }
 
 /* ===========================
-   2) Profili illuministi: voti (1–10) + bio + citazioni + immagini
+   2) Lettere (stabili)
    =========================== */
+function hashStr(s){
+  let h=2166136261>>>0;
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h>>>0;
+}
+function pick(arr, seed){ return arr[seed % arr.length]; }
 
-function imgWithFallback(localPath, remoteUrl){
-  // prova local, se non esiste browser mostrerà alt ma poi usiamo fallback via onerror in HTML
-  return { local: localPath, remote: remoteUrl };
+function electorLetter(recLabel, p1, p2, delta){
+  const seed = hashStr([recLabel,p1,p2,String(Math.round(delta*100))].join("|"));
+  const sal = pick(["Mio caro amico,","Signore,","Caro compatriota,"], seed);
+  const incipit = pick([
+    "Ho veduto che, quando gli uomini parlano di giustizia, spesso parlano di sé; e perciò conviene pesare più che applaudire.",
+    "In questi tempi la parola libertà corre come moneta; ma si conosce la moneta vera quando non trema nella mano.",
+    "Molti chiamano ragione ciò che è abitudine; io ho preferito far tacere l’abitudine e ascoltare l’ordine delle importanze."
+  ], seed>>>1);
+  const nodo = pick([
+    `Tra tutte le cose, due ti hanno guidato più delle altre: <b>${p1}</b> e <b>${p2}</b>.`,
+    `Nel tuo bilancio primeggiano <b>${p1}</b> e <b>${p2}</b>, e da qui muove il resto.`,
+    `I tuoi pesi si raccolgono in due capi: <b>${p1}</b> e <b>${p2}</b>.`
+  ], seed>>>2);
+
+  const esito =
+    recLabel==="si" ? "Per questi pesi, mi pare più conforme dare assenso." :
+    recLabel==="no" ? "Per questi pesi, mi pare più conforme negare l’assenso." :
+    "Per questi pesi, la bilancia non si dichiara; ed io non forzo la bilancia.";
+
+  const chiosa = pick([
+    "Non ti mando un decreto, ma una misura: e la misura, se è onesta, non grida.",
+    "Non ho l’arte di profetare; ho solo la pazienza di pesare.",
+    "S’io errassi, errerei con te: perché i pesi sono tuoi, non miei."
+  ], seed>>>3);
+
+  return { text:`${sal}<br>${incipit}<br>${nodo}<br>${esito}<br><span style="color:rgba(81,96,107,0.95)">${chiosa}</span>`, sig:"— Usbek" };
+}
+
+const authorLetters = {
+  montesquieu: ({p1,p2,rec}) => ({
+    sig:"— Montesquieu",
+    text:`Caro Rica,<br>
+      la libertà non è un clamore: è una tranquillità dell’animo, nata dall’opinione di essere al sicuro.<br>
+      Se tu poni in cima <b>${p1}</b>, guardi alla forma che impedisce al potere di confondersi; se innalzi <b>${p2}</b>, cerchi che la sentenza non porti odore di parte.<br>
+      Per questa disposizione, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">I poteri si toccano per frenarsi; ma guai se s’abbracciano per dominare.</span>`
+  }),
+  beccaria: ({p1,p2,rec}) => ({
+    sig:"— Beccaria",
+    text:`Signore,<br>
+      in materia penale la prima virtù è la certezza, la seconda è la chiarezza; e dove mancano, nasce l’arbitrio con maschera d’equità.<br>
+      Io ragiono come in un sillogismo: la maggiore è <b>${p1}</b>; la minore è <b>${p2}</b>; la conseguenza dev’essere libertà o pena, non capriccio.<br>
+      Secondo questo ordine, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">Quando il giudizio diventa invenzione, la sorte del cittadino diventa caso.</span>`
+  }),
+  madison: ({p1,p2,rec}) => ({
+    sig:"— Madison",
+    text:`To the People,<br>
+      un governo deve prima governare gli uomini, e poi costringere sé stesso a non oltrepassare misura.<br>
+      Quando mi dici <b>${p1}</b> e <b>${p2}</b>, io odo una domanda: la struttura offre mezzi e motivi perché un potere arresti l’altro?<br>
+      Per questa architettura, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">Se gli uomini non sono angeli, le istituzioni non devono comportarsi come se lo fossero.</span>`
+  }),
+  hume: ({p1,p2,rec}) => ({
+    sig:"— Hume",
+    text:`Sir,<br>
+      conviene supporre che molti agiscano per interesse più che per virtù; e non è ingiuria, è prudenza.<br>
+      Se tu esalti <b>${p1}</b> e <b>${p2}</b>, bada che l’interesse privato, incanalato, finisca per cooperare al bene pubblico.<br>
+      Per questa considerazione, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">La libertà non vive di fiducia: vive di diffidenze ordinate.</span>`
+  }),
+  burke: ({p1,p2,rec}) => ({
+    sig:"— Burke",
+    text:`Caro Signore,<br>
+      io diffido delle rotture che promettono perfezione: spesso rompono ciò che non sapevano riparare.<br>
+      Se tu poni <b>${p1}</b> e <b>${p2}</b> a governo del giudizio, domanda se il mutamento corregge la parte che devia, senza decomporre l’intero corpo.<br>
+      Per questo criterio, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">Si cambi per conservare: il rimedio migliore guarisce senza uccidere il paziente.</span>`
+  }),
+  kant: ({p1,p2,rec}) => ({
+    sig:"— Kant",
+    text:`Cittadino,<br>
+      la questione non è soltanto che cosa decidere, ma se tu possa giustificare la regola davanti a chiunque, senza eccezioni.<br>
+      Se i tuoi primi pesi sono <b>${p1}</b> e <b>${p2}</b>, tu chiedi che il giudizio non dipenda dall’umore, ma da una forma che valga per tutti.<br>
+      Perciò, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">La libertà non è licenza: è vivere sotto leggi che la ragione può dichiarare.</span>`
+  }),
+  tocqueville: ({p1,p2,rec}) => ({
+    sig:"— Tocqueville",
+    text:`Signore,<br>
+      le democrazie hanno una pendenza naturale verso la centralizzazione; e la libertà, invece, è un’arte faticosa.<br>
+      Se tu innalzi <b>${p1}</b> e <b>${p2}</b>, chiedi che la giustizia non divenga un solo centro da cui tutto dipende, ma un ordine di responsabilità e controlli.<br>
+      Per questa ragione, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">Dove tutto si decide in alto, in basso si disimpara a volere.</span>`
+  }),
+  diderot: ({p1,p2,rec}) => ({
+    sig:"— Diderot",
+    text:`Amico,<br>
+      il primo abuso è l’oscurità: quando ciò che decide della tua libertà è opaco, già comanda più del dovuto.<br>
+      Se metti davanti <b>${p1}</b> e <b>${p2}</b>, tu vuoi che la giustizia sia un mestiere leale e comprensibile, non un rito che vive di segreti.<br>
+      Per questo, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">La chiarezza è una forma di giustizia; l’oscurità, una forma di comando.</span>`
+  }),
+  filangieri: ({p1,p2,rec}) => ({
+    sig:"— Filangieri",
+    text:`Signore,<br>
+      la legislazione non è un discorso: è un’arte di garanzie. Se la regola è incerta, la libertà diventa un favore.<br>
+      Quando tu elevi <b>${p1}</b> e <b>${p2}</b>, chiedi che l’ordine riduca l’occasione dell’arbitrio e renda stabile ciò che oggi è conteso.<br>
+      Per questo, ${rec}.<br>
+      <span style="color:rgba(81,96,107,0.95)">Si cerchi la regola che dura: non la promessa che brilla.</span>`
+  })
+};
+
+function buildLettre(recLabel, topPrinciples, delta, authorKey){
+  const p1 = topPrinciples[0] || "un primo principio";
+  const p2 = topPrinciples[1] || "un secondo principio";
+  const rec =
+    recLabel==="si" ? "mi pare più conforme dare assenso" :
+    recLabel==="no" ? "mi pare più conforme negare l’assenso" :
+    "mi pare più conforme sospendere il giudizio";
+
+  if(!authorKey) return electorLetter(recLabel, p1, p2, delta);
+  const fn = authorLetters[authorKey];
+  if(!fn) return electorLetter(recLabel, p1, p2, delta);
+  return fn({p1,p2,rec,delta});
+}
+
+/* ===========================
+   3) Profili (con fallback immagini)
+   =========================== */
+function imgWithFallback(localPath, commonsFileName){
+  const remote = "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(commonsFileName);
+  return { local: localPath, remote };
 }
 
 const profileData = {
   montesquieu: {
-    name: "Montesquieu",
-    years: "1689–1755",
-    icon: "⚖️",
-    img: imgWithFallback(
-      "img/montesquieu.png",
-      "https://upload.wikimedia.org/wikipedia/commons/3/3c/Montesquieu_1.png"
-    ), // Wikimedia Commons file page [8](https://commons.wikimedia.org/wiki/File:Montesquieu_1.png)
-    bio: "Filosofo politico francese. In De l’esprit des lois (1748) definisce la libertà politica come sicurezza e insiste sulla separazione dei poteri, soprattutto sul separare il giudicare dagli altri poteri.",
-    coreQuotes: [
-      "« Pour qu’on ne puisse abuser du pouvoir, il faut que, par la disposition des choses, le pouvoir arrête le pouvoir. » (Livre XI, ch. IV).",
-      "« Il n’y a point encore de liberté, si la puissance de juger n’est pas séparée… » (Livre XI, ch. VI)."
-    ],
-    // differenze: più peso a C1,C2,C3,C6 (separazione + sicurezza + contrappesi)
-    votes: [9,8,8,4,4,7]
-  },
-  madison: {
-    name: "James Madison",
-    years: "1751–1836",
-    icon: "🏛️",
-    img: imgWithFallback(
-      "img/madison.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/7/7d/James_Madison_Portrait2.jpg"
-    ), // Wikimedia Commons file page [10](https://commons.wikimedia.org/wiki/File:James_Madison_Portrait2.jpg)
-    bio: "Padre fondatore USA. In Federalist 51 (1788) difende checks and balances: la struttura del governo deve creare contrappesi interni per prevenire concentrazioni di potere.",
-    coreQuotes: [
-      "“Ambition must be made to counteract ambition.” (Federalist 51).",
-      "“The great security… consists in giving… constitutional means… to resist encroachments…” (Federalist 51)."
-    ],
-    // più peso a C6 e C5, poi C1/C2 medi
-    votes: [6,6,6,3,8,10]
+    name:"Montesquieu", years:"1689–1755", icon:"⚖️",
+    img: imgWithFallback("img/montesquieu.png","Montesquieu_1.png"),
+    bio:"Libertà come sicurezza e separazione dei poteri.",
+    coreQuotes:["« …le pouvoir arrête le pouvoir. »"],
+    votes:[9,8,8,4,4,7]
   },
   beccaria: {
-    name: "Cesare Beccaria",
-    years: "1738–1794",
-    icon: "📜",
-    img: imgWithFallback(
-      "img/beccaria.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/5/5f/Cesare_Beccaria_1738-1794.jpg"
-    ), // Wikimedia Commons file page [9](https://commons.wikimedia.org/wiki/File:Cesare_Beccaria_1738-1794.jpg)
-    bio: "Giurista illuminista milanese. In Dei delitti e delle pene (1764) combatte tortura e arbitrarietà e chiede leggi chiare e giudice vincolato alla legge (anti‑interpretazione discrezionale).",
-    coreQuotes: [
-      "« Nemmeno l’autorità d’interpretare le leggi penali può risedere presso i giudici… » (Cap. IV).",
-      "« …il sillogismo perfetto… la libertà o la pena… » (Cap. IV)."
-    ],
-    // più peso a C4 e C3 (prevedibilità + sicurezza), poi C1/C2 medi
-    votes: [6,6,7,10,6,4]
+    name:"Cesare Beccaria", years:"1738–1794", icon:"📜",
+    img: imgWithFallback("img/beccaria.jpg","Cesare_Beccaria_1738-1794.jpg"),
+    bio:"Anti‑arbitrio: legge chiara, giudice vincolato alla legge.",
+    coreQuotes:["« …l’autorità d’interpretare… non può risiedere presso i giudici… »"],
+    votes:[6,6,7,10,6,4]
+  },
+  madison: {
+    name:"James Madison", years:"1751–1836", icon:"🏛️",
+    img: imgWithFallback("img/madison.jpg","James_Madison_Portrait2.jpg"),
+    bio:"Contrappesi interni: ambizione contro ambizione.",
+    coreQuotes:["“Ambition must be made to counteract ambition.”"],
+    votes:[6,6,6,3,8,10]
+  },
+  hume: {
+    name:"David Hume", years:"1711–1776", icon:"🧠",
+    img: imgWithFallback("img/hume.jpg","David_Hume.jpg"),
+    bio:"Scettico istituzionale: assumere interesse privato, costruire controlli.",
+    coreQuotes:["« …every man ought to be supposed a knave… »"],
+    votes:[6,5,6,4,8,9]
+  },
+  burke: {
+    name:"Edmund Burke", years:"1729–1797", icon:"🧱",
+    img: imgWithFallback("img/burke.jpg","Edmund_Burke_EMWEA.jpg"),
+    bio:"Prudenza politica: riformare per preservare; diffida delle rotture.",
+    coreQuotes:["“A state without the means of some change…”"],
+    votes:[8,6,8,5,7,9]
+  },
+  kant: {
+    name:"Immanuel Kant", years:"1724–1804", icon:"🕊️",
+    img: imgWithFallback("img/kant.jpg","Immanuel_Kant_(portrait).jpg"),
+    bio:"Emancipazione intellettuale e riforma graduale.",
+    coreQuotes:["“Sapere aude!”"],
+    votes:[7,7,7,6,6,6]
+  },
+  tocqueville: {
+    name:"Alexis de Tocqueville", years:"1805–1859", icon:"🕯️",
+    img: imgWithFallback("img/tocqueville.jpg","Alexis_de_tocqueville.jpg"),
+    bio:"Libertà come “arte”: la centralizzazione cresce naturalmente.",
+    coreQuotes:["“Centralization will be the natural government.”"],
+    votes:[6,5,7,5,7,9]
+  },
+  diderot: {
+    name:"Denis Diderot", years:"1713–1784", icon:"📚",
+    img: imgWithFallback("img/diderot.jpg","Denis_Diderot_portrait.jpg"),
+    bio:"Enciclopedista: sospetto verso autorità non giustificate; spirito critico.",
+    coreQuotes:["(Encyclopédie: critica dell’autorità ricevuta)"],
+    votes:[7,7,6,6,7,6]
+  },
+  filangieri: {
+    name:"Gaetano Filangieri", years:"1752–1788", icon:"🏺",
+    img: imgWithFallback("img/filangieri.jpg","Portrait_of_Gaetano_Filangieri_MET_DP805362.jpg"),
+    bio:"Riformatore giuridico: garanzie, chiarezza delle leggi, anti‑arbitrio.",
+    coreQuotes:["(Scienza della legislazione: razionalizzare le garanzie)"],
+    votes:[7,7,7,9,6,6]
   }
 };
 
+function getCompareVotes(){
+  if(!compareKey) return null;
+  return profileData[compareKey]?.votes || null;
+}
+
 /* ===========================
-   3) Render UI
+   4) UI render
    =========================== */
 const criteriaBody = document.getElementById("criteriaBody");
 const motivationList = document.getElementById("motivationList");
 const electorSummary = document.getElementById("electorSummary");
+const contribBody = document.getElementById("contribBody");
+const contribSum = document.getElementById("contribSum");
 
 function renderCriteria(){
   criteriaBody.innerHTML = "";
   motivationList.innerHTML = "";
-
   for(let i=0;i<criteria.length;i++){
     const c = criteria[i];
+    const diff = c.si - c.no;
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td class="code">${c.code}</td>
       <td>
         <b>${c.title}</b>
         <div class="desc">${c.sci}</div>
+        <div class="tilt">${tiltLabel(diff)} <small>(${c.si} vs ${c.no})</small></div>
+        <div class="desc">${c.tiltNote || ""}</div>
         <div class="why"><i>${c.quote}</i></div>
       </td>
       <td>
@@ -498,11 +763,10 @@ function renderCriteria(){
     criteriaBody.appendChild(tr);
 
     const li = document.createElement("li");
-    li.textContent = `${c.code} — ${c.title}: ${c.sci}`;
+    li.textContent = `${c.title}: ${c.sci}`;
     motivationList.appendChild(li);
   }
 
-  // listeners
   for(let i=0;i<criteria.length;i++){
     document.getElementById(`v_${i}`).addEventListener("input", (e)=>{
       electorVotes[i] = clamp(Number(e.target.value)||1, 1, 10);
@@ -519,8 +783,8 @@ function renderProfiles(){
     const p = profileData[key];
     const card = document.createElement("div");
     card.className = "profile";
+    card.id = `profile_${key}`;
 
-    // mini table of votes per criterion
     let miniRows = "";
     for(let i=0;i<criteria.length;i++){
       miniRows += `<tr><td class="code">${criteria[i].code}</td><td>${criteria[i].title}</td><td><b>${p.votes[i]}</b></td></tr>`;
@@ -543,8 +807,8 @@ function renderProfiles(){
         </div>
 
         <div class="btnrow">
-          <button data-apply="${key}">Applica questi voti ai miei</button>
-          <button data-eval="${key}" style="background:#142042">Giudizio del profilo</button>
+          <button data-compare="${key}">Confronta questi voti con i miei</button>
+          <button data-eval="${key}" class="secondary">Giudizio del profilo</button>
         </div>
 
         <div class="desc" id="profileEval_${key}" style="margin-top:10px; display:none;"></div>
@@ -553,75 +817,72 @@ function renderProfiles(){
     box.appendChild(card);
   });
 
-  // apply buttons
-  box.querySelectorAll("button[data-apply]").forEach(btn=>{
+  box.querySelectorAll("button[data-compare]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
-      const key = btn.getAttribute("data-apply");
-      electorVotes = [...profileData[key].votes];
-      // update inputs
-      for(let i=0;i<criteria.length;i++){
-        const inp = document.getElementById(`v_${i}`);
-        if(inp) inp.value = electorVotes[i];
-      }
+      const key = btn.getAttribute("data-compare");
+      compareKey = (compareKey===key) ? null : key;
+      refreshCompareHighlight();
       updateAll();
-      flashToast(`Applicato profilo: ${profileData[key].name}`);
     });
   });
 
-  // profile judgement buttons
   box.querySelectorAll("button[data-eval]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const key = btn.getAttribute("data-eval");
       const el = document.getElementById(`profileEval_${key}`);
       if(!el) return;
       const open = el.style.display === "block";
-      if(open){
-        el.style.display = "none";
-        return;
-      }
-      el.style.display = "block";
-      el.innerHTML = buildProfileJudgementHTML(key);
+      el.style.display = open ? "none" : "block";
+      if(!open) el.innerHTML = buildProfileJudgementHTML(key);
     });
   });
+
+  refreshCompareHighlight();
+}
+
+function refreshCompareHighlight(){
+  const legend = document.getElementById("legendCompare");
+  const legendName = document.getElementById("legendCompareName");
+  Object.keys(profileData).forEach(k=>{
+    const el = document.getElementById(`profile_${k}`);
+    if(el) el.classList.toggle("compareOn", compareKey===k);
+  });
+  if(compareKey){
+    legend.style.display="flex";
+    legendName.textContent = profileData[compareKey].name;
+  }else{
+    legend.style.display="none";
+  }
 }
 
 /* ===========================
-   4) Sintesi: elettore + profili
+   5) Sintesi / giudizi
    =========================== */
-
 function topCriteriaFromWeights(weights){
-  // return indices of top 2 weights
-  const pairs = weights.map((w,i)=>({w,i})).sort((a,b)=>b.w-a.w);
-  return pairs.slice(0,2).map(p=>p.i);
+  return weights.map((w,i)=>({w,i})).sort((a,b)=>b.w-a.w).slice(0,2).map(p=>p.i);
 }
 
 function buildJudgementText(si, no, weights){
   const d = si-no;
   const top2 = topCriteriaFromWeights(weights);
-  const a = criteria[top2[0]];
-  const b = criteria[top2[1]];
+  const a = criteria[top2[0]], b = criteria[top2[1]];
+  const baseWhy = `I principi dominanti (secondo i tuoi pesi) sono: “${a.title}” e “${b.title}”.`;
 
-  const baseWhy = `I criteri che pesano di più (secondo i tuoi voti) sono ${a.code} e ${b.code}.`;
+  if(Math.abs(d) < 0.0001) return { label:"pareggio", text:`Pareggio: SÌ e NO risultano equivalenti. ${baseWhy}` };
+  if(d>0) return { label:"si", text:`Consiglio di coerenza: tende a favorire SÌ. ${baseWhy}` };
+  return { label:"no", text:`Consiglio di coerenza: tende a favorire NO. ${baseWhy}` };
+}
 
-  if(Math.abs(d) < 0.0001){
-    return {
-      label:"pareggio",
-      text:`Pareggio: con questi valori, SÌ e NO risultano equivalenti. ${baseWhy}`,
-      cite:`Principio: la libertà dipende dalla “disposizione delle cose” e dai contrappesi.`
-    };
-  }
-  if(d>0){
-    return {
-      label:"si",
-      text:`Consiglio di coerenza: tende a favorire SÌ. ${baseWhy} La scelta appare coerente se per te è centrale la terzietà nel processo (C2) e/o la riduzione della “vicinanza strutturale” tra accusa e giudice.`,
-      cite:`Montesquieu insiste che “tout serait perdu” se i poteri si cumulano; separare funzioni è un cardine. [5](https://gallica.bnf.fr/essentiels/montesquieu/esprit-lois/constitution-angleterre)`
-    };
-  }
-  return {
-    label:"no",
-    text:`Consiglio di coerenza: tende a favorire NO. ${baseWhy} La scelta appare coerente se per te è centrale ridurre qualsiasi leva politica sul giudicare (C1) e massimizzare la sicurezza/indipendenza percepita (C3).`,
-    cite:`Montesquieu: “il n’y a point encore de liberté, si la puissance de juger n’est pas séparée…” e libertà come “sûreté”. [5](https://gallica.bnf.fr/essentiels/montesquieu/esprit-lois/constitution-angleterre)`
-  };
+function diffSummary(aVotes, bVotes){
+  const diffs = aVotes.map((v,i)=>({i, d: (bVotes[i]-v)}));
+  diffs.sort((x,y)=>Math.abs(y.d)-Math.abs(x.d));
+  const top = diffs.slice(0,3);
+  const meanAbs = diffs.reduce((acc,x)=>acc+Math.abs(x.d),0)/diffs.length;
+  const parts = top.map(x=>{
+    const sign = x.d>0 ? "+" : "";
+    return `${sign}${x.d} in “${criteria[x.i].title}”`;
+  });
+  return { parts, meanAbs: meanAbs.toFixed(2) };
 }
 
 function buildProfileJudgementHTML(key){
@@ -632,28 +893,27 @@ function buildProfileJudgementHTML(key){
   const d = si-no;
   const top2 = topCriteriaFromWeights(w);
 
-  const topText = top2.map(i=>`${criteria[i].code} (${criteria[i].title})`).join(" + ");
+  const topText = top2.map(i=>`“${criteria[i].title}”`).join(" + ");
   const rec = d>0 ? "favorisce SÌ" : d<0 ? "favorisce NO" : "pareggio";
 
-  // attach one relevant quote depending on dominant criteria
-  let quoteSupport = "";
-  if(top2.includes(3)){ // C4 beccaria
-    quoteSupport = `Richiamo: ${p.coreQuotes[0]} [6](https://it.wikisource.org/wiki/Dei_delitti_e_delle_pene/Capitolo_IV)`;
-  } else if(top2.includes(5)){ // C6 madison
-    quoteSupport = `Richiamo: ${p.coreQuotes[0]} [7](https://constitutioncenter.org/the-constitution/historic-document-library/detail/james-madison-federalist-no-51-1788)`;
-  } else {
-    quoteSupport = `Richiamo: ${p.coreQuotes[0]} [4](https://fr.wikisource.org/wiki/Esprit_des_lois_%281777%29/L11/C4)`;
-  }
+  const topPrinciples = top2.map(i => criteria[i].title);
+  const lettre = buildLettre(d>0 ? "si" : d<0 ? "no" : "pareggio", topPrinciples, d, key);
 
   return `
     <b>Giudizio sintetico (${p.name}):</b> indice SÌ=${si.toFixed(2)}, NO=${no.toFixed(2)} ⇒ <b>${rec}</b>.<br>
-    <b>Perché:</b> questo profilo dà più peso a <b>${topText}</b> (i suoi valori guida).<br>
-    <span class="desc">${quoteSupport}</span>
+    <b>Perché:</b> questo profilo dà più peso a ${topText}.<br>
+    <span class="desc">• ${p.coreQuotes[0] || ""}</span>
+
+    <div class="letterBox" style="margin-top:10px;">
+      <div style="font-weight:900; margin-bottom:6px;">Lettera (profilo)</div>
+      <div class="dropcap" style="font-size:13px; line-height:1.55;">${lettre.text}</div>
+      <div class="sig">${lettre.sig}</div>
+    </div>
   `;
 }
 
 /* ===========================
-   5) Radar chart: sempre visibile, con titolo e label valori
+   6) Radar poligonale completo (elettore vs profilo + distanze)
    =========================== */
 const radarCanvas = document.getElementById("radar");
 const radarCtx = radarCanvas.getContext("2d");
@@ -679,36 +939,35 @@ function drawRadar(){
   const n = criteria.length;
   const labels = criteria.map(c=>c.code);
   const full = criteria.map(c=>`${c.code} · ${c.title}`);
-  const siVals = criteria.map(c=>clamp(Number(c.si)||0,0,10));
-  const noVals = criteria.map(c=>clamp(Number(c.no)||0,0,10));
+  const A = electorVotes.map(v=>clamp(Number(v)||0,0,10));
+  const Braw = getCompareVotes();
+  const B = Braw ? Braw.map(v=>clamp(Number(v)||0,0,10)) : null;
 
-  // layout
   const cx = w*0.5, cy = h*0.56;
   const R  = Math.min(w,h)*0.33;
   const rot = -Math.PI/2;
 
-  // title
-  radarCtx.fillStyle = "rgba(234,240,255,0.95)";
+  // titolo
+  radarCtx.fillStyle = "rgba(31,41,55,0.92)";
   radarCtx.font = "14px var(--sans)";
   radarCtx.textAlign = "center";
   radarCtx.textBaseline = "top";
-  radarCtx.fillText("Radar: punteggi standard SÌ/NO per criterio (0–10)", cx, 10);
+  radarCtx.fillText("Radar: importanze (1–10) — Elettore vs Profilo", cx, 10);
 
-  // grid rings
-  const gridCol = "rgba(255,255,255,0.10)";
-  for(let r=1;r<=5;r++){
-    polygon((R*r)/5, gridCol, 1);
-  }
+  // griglia
+  const gridCol = "rgba(99,102,241,0.00)";
+  const gridStroke = "rgba(203,191,174,0.55)";
+  for(let r=1;r<=5;r++) polygon((R*r)/5, gridStroke, 1);
 
-  // axes
-  const axisCol = "rgba(255,255,255,0.12)";
+  // assi
+  const axisCol = "rgba(203,191,174,0.65)";
   for(let i=0;i<n;i++){
     const ang = rot + i*(2*Math.PI/n);
     line(cx,cy,cx+R*Math.cos(ang), cy+R*Math.sin(ang), axisCol, 1);
   }
 
-  // ticks
-  radarCtx.fillStyle = "rgba(169,182,214,0.85)";
+  // tacche
+  radarCtx.fillStyle = "rgba(95,107,115,0.9)";
   radarCtx.font = "12px var(--mono)";
   radarCtx.textBaseline = "middle";
   for(let t=0;t<=10;t+=2){
@@ -716,8 +975,8 @@ function drawRadar(){
     radarCtx.fillText(String(t), cx, cy-rr);
   }
 
-  // axis labels (wrapped)
-  radarCtx.fillStyle = "rgba(234,240,255,0.90)";
+  // etichette
+  radarCtx.fillStyle = "rgba(31,41,55,0.92)";
   radarCtx.font = "11px var(--sans)";
   for(let i=0;i<n;i++){
     const ang = rot + i*(2*Math.PI/n);
@@ -727,25 +986,35 @@ function drawRadar(){
 
     radarCtx.textAlign = (ux>0.25)?"left":(ux<-0.25)?"right":"center";
     radarCtx.textBaseline = (uy>0.25)?"top":(uy<-0.25)?"bottom":"middle";
-    wrapText(full[i], x, y, 190, 13);
+    wrapText(full[i], x, y, 210, 13);
   }
 
-  // datasets
-  const siStroke="rgba(45,212,191,0.95)";
-  const siFill  ="rgba(45,212,191,0.18)";
-  const noStroke="rgba(251,113,133,0.95)";
-  const noFill  ="rgba(251,113,133,0.15)";
+  const AStroke="rgba(176,137,46,0.95)";
+  const AFill  ="rgba(176,137,46,0.18)";
+  const BStroke="rgba(31,138,107,0.95)";
+  const BFill  ="rgba(31,138,107,0.14)";
 
-  drawDataset(noVals, noStroke, noFill);
-  drawDataset(siVals, siStroke, siFill);
+  const ptsA = valuesToPts(A);
+  drawDataset(ptsA, AStroke, AFill);
+  drawPoints(ptsA, AStroke);
+  drawPointLabels(ptsA, A, labels, AStroke, -8);
 
-  // points + point labels
-  const noPts = valuesToPts(noVals);
-  const siPts = valuesToPts(siVals);
-  drawPoints(noPts, noStroke);
-  drawPoints(siPts, siStroke);
-  drawPointLabels(noPts, noVals, labels, noStroke, -8);
-  drawPointLabels(siPts, siVals, labels, siStroke, +8);
+  if(B){
+    const ptsB = valuesToPts(B);
+    drawDataset(ptsB, BStroke, BFill);
+    drawPoints(ptsB, BStroke);
+    drawPointLabels(ptsB, B, labels, BStroke, +8);
+
+    // segmenti distanza
+    radarCtx.strokeStyle = "rgba(95,107,115,0.35)";
+    radarCtx.lineWidth = 1;
+    for(let i=0;i<n;i++){
+      radarCtx.beginPath();
+      radarCtx.moveTo(ptsA[i].x, ptsA[i].y);
+      radarCtx.lineTo(ptsB[i].x, ptsB[i].y);
+      radarCtx.stroke();
+    }
+  }
 
   function valuesToPts(values){
     const pts=[];
@@ -771,8 +1040,7 @@ function drawRadar(){
     radarCtx.moveTo(x1,y1); radarCtx.lineTo(x2,y2);
     radarCtx.strokeStyle=col; radarCtx.lineWidth=lw; radarCtx.stroke();
   }
-  function drawDataset(values, stroke, fill){
-    const pts=valuesToPts(values);
+  function drawDataset(pts, stroke, fill){
     radarCtx.beginPath();
     pts.forEach((p,idx)=> idx===0?radarCtx.moveTo(p.x,p.y):radarCtx.lineTo(p.x,p.y));
     radarCtx.closePath();
@@ -801,8 +1069,8 @@ function drawRadar(){
       radarCtx.textAlign=(ux>0.25)?"left":(ux<-0.25)?"right":"center";
       radarCtx.textBaseline=(uy>0.25)?"top":(uy<-0.25)?"bottom":"middle";
 
-      const text=`${codes[i]} ${values[i].toFixed(1)}`;
-      strokeText(text,lx,ly,"rgba(11,20,48,0.95)",3);
+      const text=`${codes[i]} ${values[i].toFixed(0)}`;
+      strokeText(text,lx,ly,"rgba(255,253,248,0.95)",3);
       radarCtx.fillText(text,lx,ly);
     }
   }
@@ -841,12 +1109,11 @@ function drawRadar(){
 }
 
 /* ===========================
-   6) Update All (elettore + grafico + sintesi + profili)
+   7) Update
    =========================== */
 function updateAll(){
   const weights = normalizeVotes(electorVotes);
 
-  // update weight display + chips
   document.getElementById("sumChip").innerHTML = `Somma dei tuoi voti = <b>${sum(electorVotes)}</b>`;
   document.getElementById("normChip").innerHTML = `Pesi (normalizzati) = <b>${sum(weights).toFixed(2)}</b>`;
 
@@ -855,7 +1122,6 @@ function updateAll(){
     if(el) el.textContent = weights[i].toFixed(3);
   }
 
-  // compute scores
   const si = scoreOption(weights,"si");
   const no = scoreOption(weights,"no");
   const d  = si-no;
@@ -881,9 +1147,28 @@ function updateAll(){
   }
 
   document.getElementById("whyChoice").innerHTML =
-    `<b>Giudizio sintetico (elettore):</b> ${judgement.text}<br><span class="desc">${judgement.cite}</span>`;
+    `<b>Giudizio sintetico (elettore):</b> ${judgement.text}`;
 
-  // elector summary table
+  // Contributi
+  contribBody.innerHTML = "";
+  let sumContrib = 0;
+  for(let i=0;i<criteria.length;i++){
+    const diff = (criteria[i].si - criteria[i].no);
+    const contrib = weights[i] * diff;
+    sumContrib += contrib;
+    contribBody.innerHTML += `
+      <tr>
+        <td class="code">${criteria[i].code}</td>
+        <td>${criteria[i].title}</td>
+        <td>${weights[i].toFixed(3)}</td>
+        <td>${diff.toFixed(0)}</td>
+        <td>${contrib.toFixed(3)}</td>
+      </tr>
+    `;
+  }
+  contribSum.textContent = sumContrib.toFixed(3);
+
+  // Riepilogo
   electorSummary.innerHTML = "";
   const top2 = topCriteriaFromWeights(weights);
   for(let i=0;i<criteria.length;i++){
@@ -898,64 +1183,58 @@ function updateAll(){
     `;
   }
 
+  // Lettera elettore
+  const top2principles = top2.map(i => criteria[i].title);
+  const lettre = buildLettre(judgement.label, top2principles, d, null);
+  document.getElementById("lettreElector").innerHTML = lettre.text;
+  document.getElementById("lettreElectorSig").textContent = lettre.sig;
+
+  // Confronto profilo
+  const note = document.getElementById("compareNote");
+  const B = getCompareVotes();
+  const legend = document.getElementById("legendCompare");
+  const legendName = document.getElementById("legendCompareName");
+
+  if(compareKey && B){
+    legend.style.display = "flex";
+    legendName.textContent = profileData[compareKey].name;
+    const s = diffSummary(electorVotes, B);
+    note.style.display = "block";
+    note.innerHTML = `<b>Confronto con ${profileData[compareKey].name}:</b> differenze maggiori: ${s.parts.join("; ")}.
+      <br><span class="desc">Distanza media (assoluta): <b>${s.meanAbs}</b> punti su 10.</span>`;
+  }else{
+    legend.style.display = "none";
+    note.style.display = "none";
+    note.innerHTML = "";
+  }
+
   drawRadar();
 }
 
-function flashToast(text){
-  let t = document.getElementById("toast");
-  if(!t){
-    t = document.createElement("div");
-    t.id="toast";
-    t.style.position="fixed";
-    t.style.left="50%";
-    t.style.transform="translateX(-50%)";
-    t.style.bottom="135px";
-    t.style.padding="10px 12px";
-    t.style.border="1px solid var(--line)";
-    t.style.borderRadius="999px";
-    t.style.background="rgba(11,20,48,0.92)";
-    t.style.color="var(--text)";
-    t.style.fontSize="12px";
-    t.style.zIndex="9999";
-    document.body.appendChild(t);
-  }
-  t.textContent = text;
-  t.style.display="block";
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(()=>{ t.style.display="none"; }, 1600);
-}
-
 /* ===========================
-   7) Init + render profiles + controls
+   8) Init
    =========================== */
 function init(){
   renderCriteria();
   renderProfiles();
 
-  // buttons
   document.getElementById("btnReset").addEventListener("click", ()=>{
     electorVotes = [5,5,5,5,5,5];
-    for(let i=0;i<criteria.length;i++){
-      document.getElementById(`v_${i}`).value = electorVotes[i];
-    }
+    for(let i=0;i<criteria.length;i++) document.getElementById(`v_${i}`).value = electorVotes[i];
     updateAll();
-    flashToast("Reset: tutti a 5");
-  });
-  document.getElementById("btnAll5").addEventListener("click", ()=>{
-    electorVotes = [5,5,5,5,5,5];
-    for(let i=0;i<criteria.length;i++){
-      document.getElementById(`v_${i}`).value = electorVotes[i];
-    }
-    updateAll();
-    flashToast("Impostati tutti a 5");
   });
 
-  // references toggle
+  document.getElementById("btnAll5").addEventListener("click", ()=>{
+    electorVotes = [5,5,5,5,5,5];
+    for(let i=0;i<criteria.length;i++) document.getElementById(`v_${i}`).value = electorVotes[i];
+    updateAll();
+  });
+
   document.getElementById("toggleSources").addEventListener("click", ()=>{
     const box = document.getElementById("sourcesBox");
     const open = box.style.display === "block";
     box.style.display = open ? "none" : "block";
-    document.getElementById("toggleSources").textContent = open ? "Mostra riferimenti" : "Nascondi riferimenti";
+    document.getElementById("toggleSources").textContent = open ? "Mostra note" : "Nascondi note";
   });
 
   updateAll();
